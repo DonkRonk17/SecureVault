@@ -1,0 +1,9 @@
+# SecureVault - Local Encrypted Password Manager
+# Requirements
+
+# Core encryption library (required)
+cryptography>=41.0.0
+
+# Optional: Clipboard support for auto-copy
+# If not installed, passwords will be displayed on screen
+pyperclip>=1.8.0

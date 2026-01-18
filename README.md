@@ -366,7 +366,7 @@ MIT License - see LICENSE file for details.
 
 ## 🎖️ Credits
 
-Created with ❤️ as part of the Holy Grail Automation project.
+Created with ❤️ by Randell Logan Smith and Team Brain as part of the Holy Grail Automation project.
 
 **Technology:**
 - Python 3

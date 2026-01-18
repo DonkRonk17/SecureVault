@@ -1,3 +1,5 @@
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/3db0df1f-dfa7-48f6-8df8-5ac7aa46365a" />
+
 # 🔐 SecureVault - Local Encrypted Password Manager
 
 **Simple. Secure. Local.**
@@ -328,6 +330,9 @@ SecureVault is for users who want maximum privacy, control, and simplicity.
 | `delete <service>` | Delete password entry | `python securevault.py delete github` |
 
 ---
+
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/172dfd0c-8c3d-4840-9bc5-f9341c82671b" />
+
 
 ## 🤝 Contributing
 

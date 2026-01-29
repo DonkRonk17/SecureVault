@@ -1,0 +1,266 @@
+================================================================================
+SECUREVAULT CHEAT SHEET
+Local Encrypted Password Manager with AES-256
+================================================================================
+
+QUICK START
+-----------
+1. Install: pip install cryptography
+2. Create vault: python securevault.py init
+3. Add credential: python securevault.py add <service_name>
+4. Get credential: python securevault.py get <service_name>
+
+================================================================================
+CORE COMMANDS
+--------------------------------------------------------------------------------
+
+Initialize Vault (First Time):
+  python securevault.py init
+  # Creates encrypted vault at ~/.securevault.enc
+  # You'll set a master password (REMEMBER IT!)
+
+Add Credential:
+  python securevault.py add gmail
+  python securevault.py add api_key
+  python securevault.py add ssh_server
+  # Prompts for: master password, username, password
+
+Get Credential:
+  python securevault.py get gmail
+  python securevault.py get api_key
+  # Prompts for master password, then displays credentials
+
+List All Services:
+  python securevault.py list
+  # Shows all stored service names (not passwords)
+
+Delete Credential:
+  python securevault.py delete old_service
+  # Prompts for confirmation before deleting
+
+================================================================================
+PASSWORD GENERATION
+--------------------------------------------------------------------------------
+
+Generate Default (16 chars, mixed):
+  python securevault.py generate
+
+Custom Length:
+  python securevault.py generate --length 24
+  python securevault.py generate --length 32
+
+No Symbols (for restrictive sites):
+  python securevault.py generate --no-symbols
+
+No Numbers:
+  python securevault.py generate --no-numbers
+
+================================================================================
+BACKUP & RESTORE
+--------------------------------------------------------------------------------
+
+Export Backup:
+  python securevault.py export backup.json
+  python securevault.py export ~/secure_backup/vault_2026.json
+  # Creates encrypted backup file
+
+Import from Backup:
+  python securevault.py import backup.json
+  # Merges backup into existing vault
+
+================================================================================
+PYTHON API
+--------------------------------------------------------------------------------
+
+Import:
+  from securevault import SecureVault
+
+Basic Usage:
+  vault = SecureVault()
+  
+  # Unlock with master password
+  if vault.unlock("master_password"):
+      # Get credential
+      creds = vault.get_password("service_name")
+      print(creds['username'])
+      print(creds['password'])
+      
+      # List all
+      services = vault.list_services()
+      
+      # Generate password
+      new_pass = vault.generate_password(length=24)
+
+With Environment Variable (Automation):
+  import os
+  from securevault import SecureVault
+  
+  vault = SecureVault()
+  master = os.environ.get('VAULT_MASTER_PASSWORD')
+  if vault.unlock(master):
+      creds = vault.get_password("api_key")
+
+================================================================================
+AUTOMATION / SCRIPTING
+--------------------------------------------------------------------------------
+
+Set Master Password (Environment):
+  # Linux/Mac
+  export VAULT_MASTER_PASSWORD="your_master_password"
+  
+  # Windows PowerShell
+  $env:VAULT_MASTER_PASSWORD="your_master_password"
+  
+  # Windows CMD
+  set VAULT_MASTER_PASSWORD=your_master_password
+
+Use in Script:
+  #!/bin/bash
+  # Get credential using environment variable
+  python securevault.py get deploy_key << EOF
+  $VAULT_MASTER_PASSWORD
+  EOF
+
+Clear After Use:
+  unset VAULT_MASTER_PASSWORD
+
+================================================================================
+FILE LOCATIONS
+--------------------------------------------------------------------------------
+
+Vault File:
+  Windows:    C:\Users\<name>\.securevault.enc
+  Linux/Mac:  /home/<name>/.securevault.enc
+              /Users/<name>/.securevault.enc
+
+Backup Default:
+  Same directory as command execution
+
+================================================================================
+COMMON USE CASES
+--------------------------------------------------------------------------------
+
+Store API Key:
+  python securevault.py add openai_api
+  # Username: api_key
+  # Password: sk-your-api-key
+
+Store Database Credentials:
+  python securevault.py add mysql_prod
+  # Username: db_admin
+  # Password: database_password
+
+Store SSH Key:
+  python securevault.py add ssh_production
+  # Username: admin
+  # Password: ssh_password
+
+Generate Password for New Account:
+  python securevault.py generate --length 24
+
+================================================================================
+SECURITY BEST PRACTICES
+--------------------------------------------------------------------------------
+
+DO:
+  [OK] Use strong master password (16+ chars)
+  [OK] Use environment variables for automation
+  [OK] Backup vault regularly
+  [OK] Rotate credentials periodically
+  [OK] Delete old/unused credentials
+
+DON'T:
+  [X] Share master password
+  [X] Hardcode master password in scripts
+  [X] Commit vault to git
+  [X] Store vault in cloud sync
+  [X] Use weak master password
+
+================================================================================
+TROUBLESHOOTING
+--------------------------------------------------------------------------------
+
+"cryptography not installed":
+  pip install cryptography
+
+"Vault not found":
+  python securevault.py init
+  # Create new vault first
+
+"Wrong password":
+  # Re-enter master password carefully
+  # Master password cannot be recovered
+
+"Permission denied":
+  # Linux: chmod 600 ~/.securevault.enc
+  # Windows: Check file permissions
+
+================================================================================
+ENCRYPTION DETAILS
+--------------------------------------------------------------------------------
+
+Algorithm:    AES-256-CBC
+Key Derivation: PBKDF2-SHA256 (100,000 iterations)
+Salt Size:    32 bytes
+IV Size:      16 bytes
+Storage:      JSON with base64-encoded encrypted data
+
+================================================================================
+INTEGRATION WITH TEAM BRAIN TOOLS
+--------------------------------------------------------------------------------
+
+With SynapseLink:
+  from synapselink import quick_send
+  from securevault import SecureVault
+  
+  vault = SecureVault()
+  vault.unlock(master_pass)
+  quick_send("TEAM", "Credential Updated", "service_name modified")
+
+With AgentHealth:
+  from agenthealth import AgentHealth
+  from securevault import SecureVault
+  
+  health = AgentHealth()
+  vault = SecureVault()
+  health.start_session("ATLAS")
+  vault.unlock(master_pass)
+  # ... operations ...
+  health.end_session("ATLAS")
+
+With ErrorRecovery:
+  from errorrecovery import ErrorRecovery
+  from securevault import SecureVault
+  
+  recovery = ErrorRecovery()
+  try:
+      vault.unlock(master_pass)
+  except Exception as e:
+      recovery.log_error("vault_error", str(e), 
+                        recovery_action="Check master password")
+
+================================================================================
+QUICK REFERENCE
+--------------------------------------------------------------------------------
+
+init              Create new vault
+add <service>     Add credential
+get <service>     Retrieve credential
+list              List all services
+delete <service>  Delete credential
+generate          Generate password
+export <file>     Backup vault
+import <file>     Restore from backup
+--help            Show help
+
+================================================================================
+RESOURCES
+--------------------------------------------------------------------------------
+
+Documentation:   AutoProjects/SecureVault/README.md
+Examples:        AutoProjects/SecureVault/EXAMPLES.md
+Integration:     AutoProjects/SecureVault/INTEGRATION_PLAN.md
+Quick Starts:    AutoProjects/SecureVault/QUICK_START_GUIDES.md
+GitHub:          https://github.com/DonkRonk17/SecureVault
+
+================================================================================
